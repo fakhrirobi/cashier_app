@@ -21,9 +21,10 @@ Main Screen
 
 Jika terdapat transaksi yang ingin di ubah bisa ke Menu Update Item 
 2. Update Item 
-![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/assets/Update%20Item.png)
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/assets/update.png)
 Jika akan mengupdate nama saja , cukup isi di bagian 1 kemudian update nama. 
-Jika akan mengupdate price / quantity , isi bagian 2. Jika hanya salah satunya cukup dihilangkan centang nya, Kemudian Klik Update Price / Quanity 
+Jika akan mengupdate quantity -> isi nama item, Update Jumlah di bagian 2 kemudian klik Update Qty 
+Jika akan mengupdate price -> isi nama item, Update Harga di bagian 3 kemudian klik Update Price 
 
 Jika terdapat item yang ingin di hapus bisa ke Menu Delete Item  
 3. Delete Item 
@@ -40,6 +41,49 @@ Jika Order Terdapat Salah , akan muncul
 ![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/assets/CheckOrder_Salah.PNG)
 Terdapat Kesalahan pada Item Ayam karena quantity diisi bukan dengan angka, melainkan 'satu', Klik Update Item untuk langsung ke page Update 
 Kemudian setelah diperbaiki dan CheckOrder Ulang 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/assets/CheckOrder_Benar.PNG)
+5. Calculate Total Order
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/assets/ShowTotal.jpg)
+Klik Show Order , kemudian akan muncul total yang perlu dibayar : 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/assets/TotalOrder.PNG)
+
+
+
+## Test Case 
+
+### Test 1 
+Add Item : item_name : Ayam Goreng , item_qty : 2 , price_per_item : 20000
+
+![image](https://github.com/fakhrirobi/cashier_app/raw/main/test_result/Test1_a.PNG)
+Result : 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test1_a_Result.PNG)
+
+
+Add Item : item_name : Pasta Gigi , item_qty : 3, price_per_item : 15000
+
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test1_b.PNG)
+Result : 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test1_b_Result.PNG)
+
+
+Add Item : item_name : Ayam Goreng , item_qty : 2 , price_per_item : 20000
+### Test 2 
+Delete Item : Pasta Gigi 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test2.PNG)
+Result : 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test2_Result.PNG)
+
+### Test 3 
+Reset Transaction
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test3.PNG)
+Result : 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test3_Result.PNG)
+
+### Test 4 
+Total Price
+
+Result : 
+![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test4_Result.PNG)
 
 
 

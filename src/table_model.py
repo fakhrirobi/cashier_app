@@ -2,14 +2,16 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 import pandas as pd
 
-class PandasModel(QtCore.QAbstractTableModel): 
+
+class PandasModel(QtCore.QAbstractTableModel):
     """
-    Class to Moddel TableView of Pandas dictionary 
+    Class to Moddel TableView of Pandas dictionary
 
     Args:
         QtCore (_type_): _description_
     """
-    def __init__(self, df = pd.DataFrame(), parent=None): 
+
+    def __init__(self, df=pd.DataFrame(), parent=None):
         """_summary_
 
         Args:
@@ -18,10 +20,10 @@ class PandasModel(QtCore.QAbstractTableModel):
         """
         QtCore.QAbstractTableModel.__init__(self, parent=parent)
         self._df = df
-        
+
     def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
         """_
-        Function to create header 
+        Function to create header
         """
         if role != QtCore.Qt.DisplayRole:
             return QtCore.QVariant()
@@ -29,13 +31,13 @@ class PandasModel(QtCore.QAbstractTableModel):
         if orientation == QtCore.Qt.Horizontal:
             try:
                 return self._df.columns.tolist()[section]
-            except (IndexError, ):
+            except (IndexError,):
                 return QtCore.QVariant()
         elif orientation == QtCore.Qt.Vertical:
             try:
                 # return self.df.index.tolist()
                 return self._df.index.tolist()[section]
-            except (IndexError, ):
+            except (IndexError,):
                 return QtCore.QVariant()
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
@@ -48,22 +50,21 @@ class PandasModel(QtCore.QAbstractTableModel):
         return QtCore.QVariant(str(self._df.iloc[index.row(), index.column()]))
 
     def setData(self, index, value, role):
-        """_function to set values based of index and columns 
-        """
+        """_function to set values based of index and columns"""
         row = self._df.index[index.row()]
         col = self._df.columns[index.column()]
-        if hasattr(value, 'toPyObject'):
+        if hasattr(value, "toPyObject"):
             # PyQt4 gets a QVariant
             value = value.toPyObject()
         else:
             # PySide gets an unicode
             dtype = self._df[col].dtype
             if dtype != object:
-                value = None if value == '' else dtype.type(value)
+                value = None if value == "" else dtype.type(value)
         self._df.set_value(row, col, value)
         return True
 
-    def rowCount(self, parent=QtCore.QModelIndex()): 
+    def rowCount(self, parent=QtCore.QModelIndex()):
         """Function to return row count of a table from dataframe
 
         Args:
@@ -74,7 +75,7 @@ class PandasModel(QtCore.QAbstractTableModel):
         """
         return self._df.shape[0]
 
-    def columnCount(self, parent=QtCore.QModelIndex()): 
+    def columnCount(self, parent=QtCore.QModelIndex()):
         """Function to return column count of a table from dataframe
 
         Args:
@@ -86,20 +87,23 @@ class PandasModel(QtCore.QAbstractTableModel):
         return self._df.shape[1]
 
     def sort(self, column, order):
-        """Sorting Function """
+        """Sorting Function"""
         colname = self._df.columns.tolist()[column]
         self.layoutAboutToBeChanged.emit()
-        self._df.sort_values(colname, ascending= order == QtCore.Qt.AscendingOrder, inplace=True)
+        self._df.sort_values(
+            colname, ascending=order == QtCore.Qt.AscendingOrder, inplace=True
+        )
         self._df.reset_index(inplace=True, drop=True)
         self.layoutChanged.emit()
-        
-        
+
+
 class DictionaryTableModel(QtCore.QAbstractTableModel):
     """
     Class to Model Dictionary as TableView
 
 
     """
+
     def __init__(self, data, headers):
         """_summary_
 

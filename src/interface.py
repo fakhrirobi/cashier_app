@@ -6,8 +6,8 @@ from datetime import datetime
 from PyQt5 import *
 from PyQt5 import QtCore
 
-from table_model import PandasModel,DictionaryTableModel
-from transaction import Transaction
+from src.table_model import PandasModel,DictionaryTableModel
+from src.transaction import Transaction
 transaction_details = Transaction()
 
 class Functionality : 
@@ -20,44 +20,65 @@ class Functionality :
         return [data,headers]
     
 class MainScreen(QDialog,Functionality):
+    """
+    Main Menu Screen 
+    """
     def __init__(self):
         super(MainScreen, self).__init__()
+        # Load Ui File from QtDesigner
         loadUi("ui_file/main_menu.ui",self)
-        self.InputItem.clicked.connect(self.InputItemTrigger)
-        self.UpdateItem.clicked.connect(self.UpdateItemTrigger)
-        self.DeleteItem.clicked.connect(self.DeleteItemTrigger)
-        self.CheckOrder.clicked.connect(self.CheckOrderTrigger)
-        self.CalculateOrder.clicked.connect(self.CalculateOrderTrigger)
+        # Routing from each Button Clicked to Other Screen  to Know Object Button Name , need to open *.ui file and inspect with pyqtdesigner
+        self.InputItem.clicked.connect(self.InputItemTrigger) # Input Item Screen 
+        self.UpdateItem.clicked.connect(self.UpdateItemTrigger) # UpdateItem Screen 
+        self.DeleteItem.clicked.connect(self.DeleteItemTrigger)# Delete Item Screen 
+        self.CheckOrder.clicked.connect(self.CheckOrderTrigger)# CheckOrder Screen 
+        self.CalculateOrder.clicked.connect(self.CalculateOrderTrigger) # Calculate Order Screen 
     
 
         
     def InputItemTrigger(self):
+        """
+        Function that was triggereed from button click from main screen , to init Input Screen 
+        """
         inputitemscreen = InputItemScreen()
         widget.addWidget(inputitemscreen)
         widget.setCurrentIndex(widget.currentIndex()+1)
     
     def DeleteItemTrigger(self):
+        """
+        Function that was triggereed from button click from main screen , to init Delete Screen 
+        """
         deletescreen = DeleteItemScreen()
         widget.addWidget(deletescreen)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
     def UpdateItemTrigger(self):
+        """
+        Function that was triggereed from button click from main screen , to init Update Screen 
+        """
         update = UpdateItemScreen()
         widget.addWidget(update)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
     def CheckOrderTrigger(self):
+        """
+        Function that was triggereed from button click from main screen , to init CheckOrder Screen 
+        """
         checkorderscreen = CheckOrderScreen()
         widget.addWidget(checkorderscreen)
         widget.setCurrentIndex(widget.currentIndex()+1)
     
     def CalculateOrderTrigger(self):
+        """
+        Function that was triggereed from button click from main screen , to init CalculateOrder Screen 
+        """
         calculateorder = CalculateTotalOrderScreen()
         widget.addWidget(calculateorder)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
         
 class InputItemScreen(QDialog,Functionality) : 
+    
     def __init__(self):
         super(InputItemScreen, self).__init__()
         loadUi("ui_file/InputItem.ui",self)
@@ -116,17 +137,16 @@ class UpdateItemScreen(QDialog,Functionality) :
     def __init__(self):
         super(UpdateItemScreen, self).__init__()
         loadUi("ui_file/UpdateItem.ui",self)
+        #on Click Command
         self.toMainMenu.clicked.connect(self.backtomenu)
         self.SaveUpdateName.clicked.connect(self.save_item_name)
-        self.SaveUpdatePriceQty.clicked.connect(self.save_item_price_quantity)
+        self.SaveUpdateQty.clicked.connect(self.save_item_qty)
+        self.SaveUpdatePrice.clicked.connect(self.save_item_price)
 
         self.model = DictionaryTableModel(*self.generate_data())
         self.ItemTable.setModel(self.model)
 
-
-        #      self.ItemQtyBox.setReadOnly(False)
-        # if self.checkBoxItemPrice.isChecked()==True : 
-        #      self.ItemPriceBox.setReadOnly(False)
+    #on Click Function 
     def backtomenu(self) : 
         main_menu = MainScreen()
         widget.addWidget(main_menu)
@@ -153,44 +173,59 @@ class UpdateItemScreen(QDialog,Functionality) :
             self.Status.clear()
             self.ItemNameBox.clear()
             self.ItemNameBoxUpdate.clear()
-        
-    def save_item_price_quantity(self) : 
-        
+    
+    def save_item_qty(self) : 
         try : 
             item_name = self.ItemNamePriceQtyBox.text()
             new_qty = self.ItemQtyBox.text()
+            if (item_name!='') & (new_qty!='') : 
+                #save update 
+                
+                transaction_details.update_item_qty(item_name=item_name,new_qty=new_qty)
+                self.model = DictionaryTableModel(*self.generate_data())
+                self.ItemTable.setModel(self.model)
+                self.Status.setText(f'Berhasil Mengupdate  Quantity Item, {item_name}')
+
+            else : 
+                raise ValueError('Nama Item/Quantity Tidak Boleh Kosong')
+            
+        except BaseException as error : 
+            self.Status.setText(str(error))
+        
+        self.Status.clear()
+        self.ItemNamePriceQtyBox.clear()
+    
+    def save_item_price(self) : 
+        
+        try : 
+            item_name = self.ItemNamePriceQtyBox.text()
             new_price = self.ItemPriceBox.text()
             
             #check if item
 
-            if (item_name!='') & (new_qty!='') &  (self.checkBoxItemQty.isChecked() == True) : 
-                #save update 
-                transaction_details.update_item_qty(item_name=item_name,new_qty=new_qty)
-                self.model = DictionaryTableModel(*self.generate_data())
-                self.ItemTable.setModel(self.model)
-                self.Status.setText('Berhasil Mengupdate Harga / Quantity Item')
-            else : 
-                raise ValueError('Nama Item/Quantity Tidak Boleh Kosong')
+
             
-            if (item_name!='') & (new_price!='') & (self.checkBoxItemPrice.isChecked() == True) : 
+            if (item_name!='') & (new_price!='')   : 
                 
                 transaction_details.update_item_price(item_name=item_name,new_price=new_price)
                 self.model = DictionaryTableModel(*self.generate_data())
                 self.ItemTable.setModel(self.model)
 
-                self.Status.setText('Berhasil Mengupdate Harga / Quantity Item')
+                self.Status.setText(f'Berhasil Mengupdate Harga Item {item_name}')
+                
+                
+                
             else : 
                     raise ValueError('Nama Item/Quantity Tidak Boleh Kosong')
-            
+                
+
         except BaseException as error : 
             self.Status.setText(str(error))
-
-        finally : 
-            self.Status.clear()
-        # empty the boxes 
-        self.ItemNamePriceQtyBox.clear()
-        self.ItemQtyBox.clear()
+            
+        self.Status.clear()
         self.ItemPriceBox.clear()
+        # empty the boxes 
+
         
 class DeleteItemScreen(QDialog,Functionality) : 
     def __init__(self):
@@ -265,29 +300,29 @@ class CheckOrderScreen(QDialog,Functionality) :
             self.ItemTable.setModel(self.model)
         except BaseException as error : 
             self.Status.setText(str(error))
-        finally : 
-            
+                        
             
             self.to_update_screen_btn = QPushButton('Update Item')
             self.to_update_screen_btn.move(120,400)
             style_sheet = '''
             
                             QPushButton::active {
-                            background-color :  green;
+                            background-color :  #85eda1;
                             border-radius : 25px;
                             }
                             QPushButton::hover{
-                            background-color : green;
+                            background-color : #85c5ed;
                             }
 
                             QPushButton::pressed{
-                            background-color : rgb(30, 115, 227);
+                            background-color : #85c5ed;
                             }
             '''
             self.to_update_screen_btn.setStyleSheet(style_sheet)
             self.to_update_screen_btn.setFixedSize(171,51)
             self.to_update_screen_btn.clicked.connect(self.goToUpdateItem)
             self.gridLayout.addWidget(self.to_update_screen_btn)
+
             
 class CalculateTotalOrderScreen(QDialog,Functionality) : 
     def __init__(self):

@@ -86,10 +86,25 @@ Result :
 ![image](https://raw.githubusercontent.com/fakhrirobi/cashier_app/main/test_result/Test4_Result.PNG)
 
 
+## Cara Menjalankan
+1. Clone Project
+```python
+git clone https://github.com/fakhrirobi/cashier_app.git
+```
+2.ke folder clone
+```python
+cd cashier_app 
+```
+3. Jalankan src/interface.py
+```python
+python src/interface.py
+```
+
 ## Presentation 
 Youtube : 
 
-   
+
+
 
 
 
